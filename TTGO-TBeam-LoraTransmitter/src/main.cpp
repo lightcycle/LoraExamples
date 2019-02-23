@@ -56,9 +56,9 @@ void loop() {
   LoRa.beginPacket();
   LoRa.print("> ");
   LoRa.print(counter);
-  LoRa.print(gps.location.lat());
+  LoRa.print(gps.location.lat(), 6);
   LoRa.print(",");
-  LoRa.print(gps.location.lng());
+  LoRa.print(gps.location.lng(), 6);
   LoRa.endPacket();
 
   counter++;
