@@ -19,7 +19,6 @@ String packSize = "--";
 String packet; 
 
 TinyGPSPlus gps;
-// HardwareSerial Serial1(1);
 
 void setup() {
   Serial.begin(115200);
@@ -31,6 +30,7 @@ void setup() {
   SPI.begin(SCK,MISO,MOSI,SS);
   LoRa.setPins(SS,RST,DI0);
   LoRa.setSpreadingFactor(12);
+  LoRa.setSignalBandwidth(62.5E3);
   if (!LoRa.begin(915E6)) {
     Serial.println("Starting LoRa failed!");
     while (1);
@@ -51,17 +51,21 @@ static void smartDelay(unsigned long ms)
 }
 
 void loop() {
-  Serial.println(String(counter));
+  char buffer[80];
+  if (gps.location.isValid()) {
+    sprintf(buffer, "%d %.4f,%.4f", counter, gps.location.lat(), gps.location.lng());
+  } else {
+    sprintf(buffer, "%d", counter);
+  }
+  String message = String(buffer);
+
+  Serial.println(message);
 
   LoRa.beginPacket();
-  LoRa.print("> ");
-  LoRa.print(counter);
-  LoRa.print(gps.location.lat(), 6);
-  LoRa.print(",");
-  LoRa.print(gps.location.lng(), 6);
+  LoRa.print(message);
   LoRa.endPacket();
 
   counter++;
 
-  smartDelay(2000);
+  smartDelay(5000);
 }

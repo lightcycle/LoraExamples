@@ -29,7 +29,7 @@ void setup() {
   Serial.println();
   Serial.println("LoRa Receiver Callback");
   SPI.begin(SCK,MISO,MOSI,SS);
-  LoRa.setPins(SS,RST,DI0);  
+  LoRa.setPins(SS,RST,DI0);
   if (!LoRa.begin(915E6)) {
     Serial.println("Starting LoRa failed!");
     while (1);
